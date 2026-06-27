@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopoGraph Interactive Dashboard</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f6f9;
+            height:100vh;
+            overflow:hidden; /* Prevent scrolling */
+            padding:8px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:8px;
+            color:#1e293b;
+            font-size:26px;
+        }
+
+        /* =========================
+           KPI CARDS
+        ========================= */
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(6,1fr);
+            gap:8px;
+            margin-bottom:8px;
+            height:10vh;
+        }
+
+        .card{
+            background:white;
+            border-radius:10px;
+            padding:8px;
+            text-align:center;
+            box-shadow:0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        .card h2{
+            color:#2563eb;
+            font-size:22px;
+        }
+
+        .card p{
+            margin-top:4px;
+            font-size:12px;
+            color:#555;
+        }
+
+        /* =========================
+           MAIN DASHBOARD
+        ========================= */
+
+        .dashboard{
+            display:grid;
+            grid-template-columns:48% 52%;
+            gap:8px;
+            height:82vh;
+        }
+
+        /* LEFT SIDE */
+
+        .network-panel{
+            background:white;
+            border-radius:10px;
+            padding:2px;
+            box-shadow:0 2px 5px rgba(0,0,0,0.08);
+            overflow:hidden;
+        }
+
+        /* RIGHT SIDE */
+
+        .right-panel{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            grid-template-rows:1fr 1fr;
+            gap:8px;
+            height:100%;
+        }
+
+        .graph-box{
+            background:white;
+            border-radius:10px;
+            padding:4px;
+            box-shadow:0 2px 5px rgba(0,0,0,0.08);
+            overflow:hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Forces inner plot containers to grab 100% of the viewport container sizes */
+        .plotly-graph-div, .js-plotly-plot {
+            width:100% !important;
+            height:100% !important;
+        }
+
+        /* Responsive */
+
+        @media(max-width:1200px){
+
+            body{
+                overflow:auto;
+            }
+
+            .dashboard{
+                grid-template-columns:1fr;
+                height:auto;
+            }
+
+            .right-panel{
+                grid-template-columns:1fr;
+            }
+
+            .cards{
+                grid-template-columns:repeat(3,1fr);
+                height:auto;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>TopoGraph Interactive Dashboard</h1>
+
+    <div class="cards">
+
+        <div class="card">
+            <h2>{{ data.n_nodes }}</h2>
+            <p>Total Nodes</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ data.n_edges }}</h2>
+            <p>Total Edges</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ data.components }}</h2>
+            <p>Components</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ data.isolated }}</h2>
+            <p>Isolated Nodes</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ data.density }}</h2>
+            <p>Density</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ data.dag }}</h2>
+            <p>DAG?</p>
+        </div>
+
+    </div>
+
+    <div class="dashboard">
+
+        <div class="network-panel">
+            {{ network_graph | safe }}
+        </div>
+
+        <div class="right-panel">
+
+            <div class="graph-box">
+                {{ centrality_graph | safe }}
+            </div>
+
+            <div class="graph-box">
+                {{ category_graph | safe }}
+            </div>
+
+            <div class="graph-box">
+                {{ persistence_graph | safe }}
+            </div>
+
+            <div class="graph-box">
+                {{ betti_graph | safe }}
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
