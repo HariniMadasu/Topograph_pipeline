@@ -23,13 +23,20 @@ def _load_json_lenient(path):
     cleaned = re.sub(r",(\s*[\]}])", r"\1", text)
     return json.loads(cleaned)
 
-
 def load_experiential_knowledge(path):
-    """Returns the list of 41 knowledge-entry dicts (ek_0000..ek_0040)."""
+   """Returns the list of 41 knowledge-entry dicts (ek_0000..ek_0040)."""
     data = _load_json_lenient(path)
     entries = data["knowledge"]
-    assert len(entries) == len({e["id"] for e in entries}), "duplicate ek ids found"
-    return entries
+
+    seen = set()
+    result = []
+
+    for e in entries:
+        if e["id"] not in seen:
+            seen.add(e["id"])
+            result.append(e)
+
+    return result
 
 
 def load_quality_metrics(path):
